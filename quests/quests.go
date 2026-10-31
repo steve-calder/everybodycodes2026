@@ -2,6 +2,7 @@ package quests
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/steve-calder/everybodycodes2026/notes"
 )
@@ -26,20 +27,26 @@ func ExecuteQuest(quest Quest, notesQuery *notes.NotesQuery) {
 	if err != nil {
 		fmt.Printf("Error decoding Quest %d Part 1: %v\n", questId, err)
 	} else {
-		fmt.Printf("Quest %d, Part 1: %s\n", questId, quest.part1(part1Input))
+		start := time.Now()
+		result := quest.part1(part1Input)
+		fmt.Printf("Quest %d, Part 1: %s - took %v\n", questId, result, time.Since(start))
 	}
 	
 	part2Input, err := notes.Decode(2)
 	if err != nil {
 		fmt.Printf("Error decoding Quest %d Part 2: %v\n", questId, err)
 	} else {
-		fmt.Printf("Quest %d, Part 2: %s\n", questId, quest.part2(part2Input))
+		start := time.Now()
+		result := quest.part2(part2Input)
+		fmt.Printf("Quest %d, Part 2: %s - took %v\n", questId, result, time.Since(start))
 	}
 
 	part3Input, err := notes.Decode(3)
 	if err != nil {
 		fmt.Printf("Error decoding Quest %d Part 3: %v\n", questId, err)
 	} else {
-		fmt.Printf("Quest %d, Part 3: %s\n", questId, quest.part3(part3Input))
+		start := time.Now()
+		result := quest.part3(part3Input)
+		fmt.Printf("Quest %d, Part 3: %s - took %v\n", questId, result, time.Since(start))
 	}
 }

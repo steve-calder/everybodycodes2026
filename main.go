@@ -28,6 +28,7 @@ func main() {
 
 	questList := [...]quests.Quest{
 		&quests.Quest1{},
+		&quests.Quest2{},
 	}
 
 	if len(questList) > 0 && len(os.Args) > 1 {
