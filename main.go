@@ -29,6 +29,7 @@ func main() {
 	questList := [...]quests.Quest{
 		&quests.Quest1{},
 		&quests.Quest2{},
+		&quests.Quest3{},
 	}
 
 	if len(questList) > 0 && len(os.Args) > 1 {
@@ -38,7 +39,7 @@ func main() {
 			panic(err)
 		}
 
-		quests.ExecuteQuest(questList[i - 1], notesQuery)
+		quests.ExecuteQuest(questList[i-1], notesQuery)
 	} else {
 		for _, quest := range questList {
 			quests.ExecuteQuest(quest, notesQuery)
