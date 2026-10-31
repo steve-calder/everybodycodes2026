@@ -30,6 +30,7 @@ func main() {
 		&quests.Quest1{},
 		&quests.Quest2{},
 		&quests.Quest3{},
+		&quests.Quest4{},
 	}
 
 	if len(questList) > 0 && len(os.Args) > 1 {
