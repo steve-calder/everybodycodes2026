@@ -1,0 +1,35 @@
+cache/
+config.yaml
+
+# Build output
+/bin/
+/dist/
+/everybodycodes2026
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.a
+*.o
+
+# Test binaries and coverage reports
+*.test
+*.out
+/coverage/
+coverage.html
+
+# Local environment and Go workspace settings
+.env
+.env.*
+!.env.example
+go.work
+go.work.sum
+
+# Editor and OS files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

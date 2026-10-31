@@ -1,0 +1,3 @@
+EVENT: 2026
+SEED: 83
+SESSION: "session_token retrieve from https://api.everybody.codes/user/me"
