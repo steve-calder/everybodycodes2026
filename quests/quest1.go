@@ -19,9 +19,26 @@ func (q *Quest1) Execute() {
 		return
 	}
 
-	fmt.Printf("Quest 1, Part 1: %d\n", q.part1(notes.Part1))
-	fmt.Printf("Quest 1, Part 2: %d\n", q.part2(notes.Part2))
-	fmt.Printf("Quest 1, Part 3: %d\n", q.part3(notes.Part3))
+	part1Input, err := notes.Decode(1)
+	if err != nil {
+		fmt.Printf("Error decoding Part 1: %v\n", err)
+	} else {
+		fmt.Printf("Quest 1, Part 1: %d\n", q.part1(part1Input))
+	}
+	
+	part2Input, err := notes.Decode(2)
+	if err != nil {
+		fmt.Printf("Error decoding Part 2: %v\n", err)
+	} else {
+		fmt.Printf("Quest 1, Part 2: %d\n", q.part2(part2Input))
+	}
+
+	part3Input, err := notes.Decode(3)
+	if err != nil {
+		fmt.Printf("Error decoding Part 3: %v\n", err)
+	} else {
+		fmt.Printf("Quest 1, Part 3: %d\n", q.part3(part3Input))
+	}
 }
 
 func (q *Quest1) part1(input string) int {
