@@ -26,21 +26,21 @@ func main() {
 
 	notesQuery := notes.InitNotesQuery(&config)
 
-	quests := [...]quests.Quests{
-		&quests.Quest1{NotesQuery: notesQuery},
+	questList := [...]quests.Quest{
+		&quests.Quest1{},
 	}
 
-	if len(quests) > 0 && len(os.Args) > 1 {
+	if len(questList) > 0 && len(os.Args) > 1 {
 		i, err := strconv.ParseInt(os.Args[1], 10, 64)
 
 		if err != nil {
 			panic(err)
 		}
 
-		quests[i-1].Execute()
+		quests.ExecuteQuest(questList[i - 1], notesQuery)
 	} else {
-		for _, quest := range quests {
-			quest.Execute()
+		for _, quest := range questList {
+			quests.ExecuteQuest(quest, notesQuery)
 		}
 	}
 }
