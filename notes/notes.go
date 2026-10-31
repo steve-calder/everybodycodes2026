@@ -83,6 +83,32 @@ func (n *Notes) Decode(part int) (string, error) {
 	if n.config == nil || n.quest < 1 {
 		return "", fmt.Errorf("load notes with GetInput before decoding")
 	}
+	key, err := n.getKey(part)
+	if err != nil {
+		return "", err
+	}
+	input := []string{n.Part1, n.Part2, n.Part3}[part-1]
+	return decrypt(input, key)
+}
+
+func (n *Notes) getKey(part int) (string, error) {
+	cachePath := filepath.Join("cache", fmt.Sprintf("%d-%d-%d-keys.json", n.config.Event, n.quest, n.config.Seed))
+	keys := map[string]string{}
+	data, err := os.ReadFile(cachePath)
+	if err == nil {
+		if err := json.Unmarshal(data, &keys); err != nil {
+			return "", fmt.Errorf("decode cached keys: %w", err)
+		}
+	} else if !os.IsNotExist(err) {
+		return "", fmt.Errorf("read cached keys: %w", err)
+	}
+	keyName := fmt.Sprintf("key%d", part)
+	if keys[keyName] != "" {
+		return keys[keyName], nil
+	}
+	if keys == nil {
+		keys = map[string]string{}
+	}
 	if n.config.Session == "" {
 		return "", fmt.Errorf("SESSION is required to retrieve decryption keys")
 	}
@@ -101,20 +127,35 @@ func (n *Notes) Decode(part int) (string, error) {
 	if response.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("retrieve keys: HTTP %d", response.StatusCode)
 	}
-	var keys struct {
+	var available struct {
 		Key1 string `json:"key1"`
 		Key2 string `json:"key2"`
 		Key3 string `json:"key3"`
 	}
-	if err := json.NewDecoder(response.Body).Decode(&keys); err != nil {
+	if err := json.NewDecoder(response.Body).Decode(&available); err != nil {
 		return "", fmt.Errorf("decode keys: %w", err)
 	}
-	key := []string{keys.Key1, keys.Key2, keys.Key3}[part-1]
-	if key == "" {
+	for name, key := range map[string]string{"key1": available.Key1, "key2": available.Key2, "key3": available.Key3} {
+		if key != "" {
+			keys[name] = key
+		}
+	}
+	if len(keys) > 0 {
+		data, err := json.Marshal(keys)
+		if err != nil {
+			return "", fmt.Errorf("encode cached keys: %w", err)
+		}
+		if err := os.MkdirAll(filepath.Dir(cachePath), 0700); err != nil {
+			return "", fmt.Errorf("create cache directory: %w", err)
+		}
+		if err := os.WriteFile(cachePath, data, 0600); err != nil {
+			return "", fmt.Errorf("cache keys: %w", err)
+		}
+	}
+	if keys[keyName] == "" {
 		return "", fmt.Errorf("part %d is locked: key unavailable", part)
 	}
-	input := []string{n.Part1, n.Part2, n.Part3}[part-1]
-	return decrypt(input, key)
+	return keys[keyName], nil
 }
 
 func decrypt(input, key string) (string, error) {
