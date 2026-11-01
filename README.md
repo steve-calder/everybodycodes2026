@@ -53,3 +53,6 @@ go build -o bin/everybodycodes2026 .
 
 On the first run, the app downloads the quest's JSON input notes and saves them to `cache/<event>-<quest>-<seed>.json`. Later runs read that file instead of making a web request. Delete the file to download it again. The `cache/` directory is ignored by Git.
 
+## AI Usage
+
+AI was used to develop the note retrieval, decryption, and caching. AI was not used for any quest answers.
